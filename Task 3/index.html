@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Recommendation Logic - Digital Matchmaker</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header Banner -->
+        <header class="main-header">
+            <div class="brand-badge">
+                <span class="badge-icon">🚀</span>
+                <span>AI Industrial Training Kit</span>
+            </div>
+            <h1 class="main-title">Digital Matchmaker <span class="gradient-text">AI Recommendation Logic</span></h1>
+            <p class="main-subtitle">
+                Content-Based Tech Stack Recommender mapping user profiles to career paths using 
+                <code class="code-tag">TF-IDF</code> vectorization and <code class="code-tag">Cosine Similarity</code> angular alignment.
+            </p>
+        </header>
+
+        <!-- Main Layout Grid -->
+        <main class="dashboard-grid">
+            <!-- Left Column: Input & Controls -->
+            <section class="panel input-panel">
+                <div class="panel-header">
+                    <h2><span class="step-num">1</span> User Profile Ingestion</h2>
+                    <div id="min-skills-badge" class="status-badge status-warning">
+                        <span id="skills-count-num">0</span> / 3 Skills Min
+                    </div>
+                </div>
+
+                <div class="preset-section">
+                    <label class="section-label">Quick Presets:</label>
+                    <div class="preset-buttons">
+                        <button type="button" class="btn btn-preset" id="preset-ai">
+                            <span class="preset-icon">🤖</span> AI/ML Specialist
+                        </button>
+                        <button type="button" class="btn btn-preset" id="preset-web">
+                            <span class="preset-icon">💻</span> Full Stack Web
+                        </button>
+                        <button type="button" class="btn btn-preset" id="preset-sec">
+                            <span class="preset-icon">🛡️</span> Cybersecurity
+                        </button>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label for="custom-skill-input" class="section-label">Add Custom Skill or Tool:</label>
+                    <div class="input-with-button">
+                        <input type="text" id="custom-skill-input" placeholder="e.g. Terraform, PyTorch, React, SQL..." />
+                        <button type="button" id="add-skill-btn" class="btn btn-primary">+ Add</button>
+                    </div>
+                </div>
+
+                <div class="popular-skills-section">
+                    <label class="section-label">Click to Select Skills:</label>
+                    <div class="skills-pill-container" id="popular-skills-container">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+
+                <div class="selected-skills-section">
+                    <div class="selected-header">
+                        <label class="section-label">Ingested Profile Skills:</label>
+                        <button type="button" id="clear-skills-btn" class="btn-text">Clear All</button>
+                    </div>
+                    <div class="selected-skills-tags" id="selected-skills-tags">
+                        <span class="empty-placeholder">No skills selected yet. Select at least 3 skills above.</span>
+                    </div>
+                </div>
+
+                <!-- Cold Start Settings -->
+                <div class="cold-start-box">
+                    <div class="toggle-header">
+                        <span class="toggle-title">❄️ Cold Start Bypass Mode</span>
+                        <label class="switch">
+                            <input type="checkbox" id="cold-start-toggle" checked>
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+                    <p class="toggle-desc">
+                        When enabled, if fewer than 3 skills or zero vocabulary matches are provided, the engine activates the <strong>Trending Fallback Mechanism</strong> based on global popularity scores.
+                    </p>
+                </div>
+
+                <button type="button" id="run-recommendation-btn" class="btn btn-action glow-btn">
+                    <span>⚡ Run Pipeline</span>
+                </button>
+            </section>
+
+            <!-- Right Column: Visualizations & Output -->
+            <section class="panel output-panel">
+                <!-- 4-Step Pipeline Visual Progress -->
+                <div class="pipeline-stepper">
+                    <div class="step-card" id="step-1-card">
+                        <div class="step-icon">1</div>
+                        <div class="step-info">
+                            <div class="step-title">Ingestion</div>
+                            <div class="step-detail">Min 3 User Inputs</div>
+                        </div>
+                    </div>
+                    <div class="step-arrow">➔</div>
+                    <div class="step-card" id="step-2-card">
+                        <div class="step-icon">2</div>
+                        <div class="step-info">
+                            <div class="step-title">Scoring</div>
+                            <div class="step-detail">TF-IDF & Cosine Similarity</div>
+                        </div>
+                    </div>
+                    <div class="step-arrow">➔</div>
+                    <div class="step-card" id="step-3-card">
+                        <div class="step-icon">3</div>
+                        <div class="step-info">
+                            <div class="step-title">Sorting</div>
+                            <div class="step-detail">Rank Score Descending</div>
+                        </div>
+                    </div>
+                    <div class="step-arrow">➔</div>
+                    <div class="step-card" id="step-4-card">
+                        <div class="step-icon">4</div>
+                        <div class="step-info">
+                            <div class="step-title">Filtering</div>
+                            <div class="step-detail">Top-N Truncation</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Engine Visualizer Tabs -->
+                <div class="visualizer-container">
+                    <div class="tab-header">
+                        <button class="tab-btn active" data-tab="vector-space">📐 Cosine Vector Visualizer</button>
+                        <button class="tab-btn" data-tab="tfidf-weights">⚖️ TF-IDF Weights Inspector</button>
+                    </div>
+
+                    <div class="tab-content active" id="tab-vector-space">
+                        <div class="canvas-wrapper">
+                            <canvas id="vector-canvas" width="620" height="340"></canvas>
+                            <div class="canvas-legend">
+                                <span class="legend-item"><span class="color-dot user-dot"></span> User Vector (A)</span>
+                                <span class="legend-item"><span class="color-dot match-dot"></span> Candidate Vector (B)</span>
+                                <span class="legend-item"><span class="color-dot angle-dot"></span> Angular Alignment (θ)</span>
+                            </div>
+                            <div id="vector-math-breakdown" class="vector-math-box">
+                                <!-- Populated dynamically by JS -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tab-content" id="tab-tfidf-weights">
+                        <div class="tfidf-inspector-content">
+                            <p class="inspector-intro">
+                                <strong>Term Frequency-Inverse Document Frequency (TF-IDF):</strong> Rare & highly specific skills receive higher weights (IDF = log(N/df)), while generic terms across many roles receive lower weights.
+                            </p>
+                            <div id="tfidf-weights-bars" class="weights-bars-container">
+                                <!-- Populated dynamically -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Top Recommendations Results Grid -->
+                <div class="results-section">
+                    <div class="results-header">
+                        <h3>🏆 Top Recommended Career Paths (Top 3 Output)</h3>
+                        <div class="top-n-selector">
+                            <label for="top-n-select">Show Top:</label>
+                            <select id="top-n-select">
+                                <option value="3" selected>Top 3 (Standard)</option>
+                                <option value="5">Top 5</option>
+                                <option value="10">Top 10</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div id="recommendations-container" class="recommendation-cards-container">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Full Dataset Browser Footer Drawer -->
+        <footer class="dataset-drawer">
+            <details>
+                <summary class="drawer-summary">
+                    <span>📊 Explore Dataset (<code id="dataset-role-count">25</code> Job Roles in <code class="code-tag">raw_skills.csv</code>)</span>
+                    <span class="arrow-icon">▼</span>
+                </summary>
+                <div class="drawer-content">
+                    <div class="table-responsive">
+                        <table class="dataset-table" id="dataset-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Job Role Title</th>
+                                    <th>Category</th>
+                                    <th>Required Skills</th>
+                                    <th>Recommended Tools</th>
+                                    <th>Popularity</th>
+                                </tr>
+                            </thead>
+                            <tbody id="dataset-table-body">
+                                <!-- Populated dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </details>
+        </footer>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
